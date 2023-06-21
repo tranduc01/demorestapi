@@ -27,37 +27,7 @@ namespace Domain.Models
             }
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Account>(entity =>
-            {
-                entity.ToTable("Account");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Email)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("email");
-
-                entity.Property(e => e.Fullname)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("fullname");
-
-                entity.Property(e => e.Password)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("password");
-
-                entity.Property(e => e.Username)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("username");
-            });
-
-            OnModelCreatingPartial(modelBuilder);
-        }
+        
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }

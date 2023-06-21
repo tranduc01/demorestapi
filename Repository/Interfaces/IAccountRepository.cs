@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace Repository.Interfaces
 {
     public interface IAccountRepository
     {
-        public Account Login(string email, string password);
+        public Task<IdentityResult> SignUpAsync(SignUp model);
+        public Task<string> SignInAsync(SignIn model);
+        public Account GetAccountsByID(string id);
     }
 }
