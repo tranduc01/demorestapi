@@ -43,12 +43,12 @@ namespace Repository
             }
             var user = await userManager.FindByNameAsync(model.Username);
             //var role = user.Role;
-            //var authClaims = new List<Claim>
-            //{
-            //    new Claim(ClaimTypes.Email, model.Email),
-            //    new Claim(ClaimTypes.Role, role),
-            //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            //};
+            var authClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+                //new Claim(ClaimTypes.Role, role),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
 
             var authenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
 
@@ -56,7 +56,7 @@ namespace Repository
                 issuer: configuration["JWT:ValidIssuer"],
                 audience: configuration["JWT:ValidAudience"],
                 expires: DateTime.Now.AddSeconds(30),
-                //claims: authClaims,
+                claims: authClaims,
                 signingCredentials: new SigningCredentials(authenKey, SecurityAlgorithms.HmacSha512Signature)
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
