@@ -3,6 +3,10 @@ using Microsoft.IdentityModel.Tokens;
 using Repository.Interfaces;
 using Repository;
 using System.Text;
+using Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using Application.Services.AccountService;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,10 +14,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddDbContext<DemoLoginContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddIdentity<Account, IdentityRole>()
+    .AddEntityFrameworkStores<DemoLoginContext>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddTransient<IAccountService, AccountService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -38,7 +51,11 @@ builder.Services.AddAuthentication(options =>
     };
 });
 var app = builder.Build();
-
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<DemoLoginContext>();
+    await dbContext.Database.EnsureCreatedAsync();
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -48,6 +65,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Application.Services.AccountService;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Interfaces;
 
@@ -8,14 +9,14 @@ namespace DemoResfulAPI.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IAccountRepository _accountRepository;
-        public AccountController(IAccountRepository accountRepository)
+        private readonly IAccountService _accountService;
+        public AccountController(IAccountService accountService)
         {
-            _accountRepository = accountRepository;
+            _accountService = accountService;
         }
         [HttpPost]
         public async Task<ActionResult> SignUp(SignUp model) {
-            var account=await _accountRepository.SignUpAsync(model);
+            var account=await _accountService.SignUpAsync(model);
             return Ok(account);
         
         }
