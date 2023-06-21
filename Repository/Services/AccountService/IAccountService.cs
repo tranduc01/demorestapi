@@ -1,6 +1,7 @@
 ﻿
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
+using Repository.DataTransferObject.Parameter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace Application.Services.AccountService
 {
     public interface IAccountService
     {
-        public Task<IdentityResult> SignUpAsync(SignUp model);
-        public Task<string> SignInAsync(SignIn model);
-        public Task<Account> GetAccountsByID(string id);
+        public Task<IdentityResult> SignUpAsync(SignUpParam model);
+        public Task<string> SignInAsync(SignInParam model);
+        public Task<Account> GetAccountsByEmail(string email);
     }
 }

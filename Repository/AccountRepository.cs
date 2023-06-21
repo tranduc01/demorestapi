@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Repository.DataTransferObject.Parameter;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -28,12 +29,13 @@ namespace Repository
             _context = context;
         }
 
-        public Account GetAccountsByID(string id)
+        public Account GetAccountsByEmail(string email)
         {
-            throw new NotImplementedException();
+            var account = _context.Accounts.FirstOrDefault(x => x.Email.Equals(email));
+            return account;
         }
 
-        public async Task<string> SignInAsync(SignIn model)
+        public async Task<string> SignInAsync(SignInParam model)
         {
             var result = await signInManager.PasswordSignInAsync
                 (model.Username, model.Password, false, false);
@@ -55,21 +57,21 @@ namespace Repository
             var token = new JwtSecurityToken(
                 issuer: configuration["JWT:ValidIssuer"],
                 audience: configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddSeconds(30),
+                expires: DateTime.Now.AddMinutes(5),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authenKey, SecurityAlgorithms.HmacSha512Signature)
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<IdentityResult> SignUpAsync(SignUp model)
+        public async Task<IdentityResult> SignUpAsync(SignUpParam model)
         {
             var account = new Account
             {
                 UserName = model.Username,
                 Email = model.Email
             };
-            return await userManager.CreateAsync(account,model.Password);
+            return await userManager.CreateAsync(account, model.Password);
         }
     }
 }

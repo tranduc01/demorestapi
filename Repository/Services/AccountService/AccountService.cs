@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Microsoft.AspNetCore.Identity;
+using Repository.DataTransferObject.Parameter;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -18,21 +19,21 @@ namespace Application.Services.AccountService
             _accountRepository = accountRepository;
            
         }
-        public async Task<Account> GetAccountsByID(string id)
+        public async Task<Account> GetAccountsByEmail(string email)
         {
-            var account = _accountRepository.GetAccountsByID(id);
+            var account = _accountRepository.GetAccountsByEmail(email);
 
             return account;
         }
 
-        public async Task<string> SignInAsync(SignIn model)
+        public async Task<string> SignInAsync(SignInParam model)
         {
             var result = await _accountRepository.SignInAsync(model);
 
             return result;
         }
 
-        public async Task<IdentityResult> SignUpAsync(SignUp model)
+        public async Task<IdentityResult> SignUpAsync(SignUpParam model)
         {
             var result = await _accountRepository.SignUpAsync(model);
             return result;

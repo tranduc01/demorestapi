@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Repository.DataTransferObject.Parameter
 {
-    public class SignUp
+    public class SignUpParam
     {
         [Required]
         public string Username { get; set; }
